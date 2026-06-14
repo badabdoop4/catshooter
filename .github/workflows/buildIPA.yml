@@ -7,10 +7,6 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
-env:
-  PROJECT_PATH: "."
-  EXPORT_PRESET_NAME: "iOS"
-
 jobs:
   build-ios:
     runs-on: macos-latest
@@ -22,13 +18,13 @@ jobs:
 
       - name: Install Godot Engine
         run: |
-          curl -L -o godot.zip https://github.com
+          curl -L -o godot.zip "https://github.com"
           unzip godot.zip
           rm godot.zip
 
       - name: Install Godot Export Templates
         run: |
-          curl -L -o templates.tpz https://github.com
+          curl -L -o templates.tpz "https://github.com"
           mkdir -p ~/Library/Application\ Support/Godot/export_templates/4.6.3.stable
           unzip templates.tpz -d tmp_templates
           mv tmp_templates/templates/* ~/Library/Application\ Support/Godot/export_templates/4.6.3.stable/
@@ -39,12 +35,12 @@ jobs:
 
       - name: Godot Export to Xcode Project
         run: |
-          ./Godot.app/Contents/MacOS/Godot --headless --path ${{ env.PROJECT_PATH }} --export-release "${{ env.EXPORT_PRESET_NAME }}" ./build/ios/project.xcodeproj
+          ./Godot.app/Contents/MacOS/Godot --headless --path . --export-release "iOS" ./build/ios/project.xcodeproj
 
       - name: Build IPA via Xcode
         run: |
           cd build/ios
-          xcodebuild -project project.xcodeproj -scheme "${{ env.EXPORT_PRESET_NAME }}" -sdk iphoneos -configuration Release CODE_SIGNING_ALLOWED=NO
+          xcodebuild -project project.xcodeproj -scheme "iOS" -sdk iphoneos -configuration Release CODE_SIGNING_ALLOWED=NO
 
       - name: Package IPA
         run: |
