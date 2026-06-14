@@ -1,0 +1,63 @@
+name: "Build ipa"
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: "4.6.3"
+  GODOT_STATUS: "stable"
+  GODOT_DOWNLOAD_URL: "https://github.com"
+  GODOT_TEMPLATES_DOWNLOAD_URL: "https://github.com"
+  PROJECT_PATH: "."
+  EXPORT_PRESET_NAME: "iOS"
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Godot Engine
+        run: |
+          curl -L -o godot.zip ${{ env.GODOT_DOWNLOAD_URL }}
+          unzip godot.zip
+          rm godot.zip
+
+      - name: Install Godot Export Templates
+        run: |
+          curl -L -o templates.tpz ${{ env.GODOT_TEMPLATES_DOWNLOAD_URL }}
+          mkdir -p ~/Library/Application\ Support/Godot/export_templates/${{ env.GODOT_VERSION }}.${{ env.GODOT_STATUS }}
+          unzip templates.tpz -d tmp_templates
+          mv tmp_templates/templates/* ~/Library/Application\ Support/Godot/export_templates/${{ env.GODOT_VERSION }}.${{ env.GODOT_STATUS }}/
+          rm -rf tmp_templates templates.tpz
+
+      - name: Setup Build Directory
+        run: mkdir -p build/ios
+
+      - name: Godot Export to Xcode Project
+        run: |
+          ./Godot.app/Contents/MacOS/Godot --headless --path ${{ env.PROJECT_PATH }} --export-release "${{ env.EXPORT_PRESET_NAME }}" ./build/ios/project.xcodeproj
+
+      - name: Build IPA via Xcode
+        run: |
+          cd build/ios
+          xcodebuild -project project.xcodeproj -scheme "${{ env.EXPORT_PRESET_NAME }}" -sdk iphoneos -configuration Release CODE_SIGNING_ALLOWED=NO
+
+      - name: Package IPA
+        run: |
+          mkdir -p build/ios/Payload
+          mv build/ios/build/Release-iphoneos/*.app build/ios/Payload/
+          cd build/ios && zip -r project.ipa Payload
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: IPA
+          path: build/ios/project.ipa
