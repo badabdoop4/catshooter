@@ -37,11 +37,14 @@ jobs:
 
       - name: Export iOS (Godot)
         run: |
+          rm -rf build/ios
+          mkdir -p build/ios
+
           ./Godot.app/Contents/MacOS/Godot \
             --headless \
             --path . \
             --export-release "iOS" \
-            build/ios/catshooter.ipa
+            build/ios
 
       - name: Debug output
         run: ls -R build
