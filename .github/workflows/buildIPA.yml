@@ -16,26 +16,25 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Godot Engine
-        run: |
-          curl -L -o godot.zip "https://github.com"
-          unzip godot.zip
-          rm godot.zip
+      - name: Download Godot Engine & Templates
+        uses: ammaraskar/download-godot@v1
+        with:
+          version: "4.6.3"
+          status: "stable"
+          platform: "osx"
+          templates: true
 
-      - name: Install Godot Export Templates
+      - name: Link Export Templates to Local Path
         run: |
-          curl -L -o templates.tpz "https://github.com"
           mkdir -p ~/Library/Application\ Support/Godot/export_templates/4.6.3.stable
-          unzip templates.tpz -d tmp_templates
-          mv tmp_templates/templates/* ~/Library/Application\ Support/Godot/export_templates/4.6.3.stable/
-          rm -rf tmp_templates templates.tpz
+          mv /Users/runner/.local/share/godot/export_templates/4.6.3.stable/* ~/Library/Application\ Support/Godot/export_templates/4.6.3.stable/
 
       - name: Setup Build Directory
         run: mkdir -p build/ios
 
       - name: Godot Export to Xcode Project
         run: |
-          ./Godot.app/Contents/MacOS/Godot --headless --path . --export-release "iOS" ./build/ios/project.xcodeproj
+          /Users/runner/Library/Application\ Support/Godot/Godot.app/Contents/MacOS/Godot --headless --path . --export-release "iOS" ./build/ios/project.xcodeproj
 
       - name: Build IPA via Xcode
         run: |
