@@ -13,6 +13,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Clean build folder
+        run: rm -rf build/ios
+
       - name: Install Godot
         run: |
           curl -L -o godot.zip \
