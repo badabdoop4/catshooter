@@ -1,35 +1,50 @@
-name: Build iOS
+name: Build iOS IPA
 
 on:
-workflow_dispatch:
+  push:
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
-build:
-runs-on: macos-latest
+  build-ios:
+    runs-on: macos-latest
 
-```
-steps:
-  - uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  - name: Show files
-    run: |
-      pwd
-      ls -la
+      - name: Install Godot
+        run: |
+          curl -L -o godot.zip \
+            https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_macos.universal.zip
+          unzip godot.zip
+          chmod +x Godot.app/Contents/MacOS/Godot
 
-  - name: Create export folder
-    run: |
-      mkdir -p build/ios
+      - name: Install Export Templates
+        run: |
+          mkdir -p "$HOME/Library/Application Support/Godot/export_templates/4.6.3.stable"
+          curl -L -o templates.tpz \
+            https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_export_templates.tpz
+          unzip templates.tpz -d templates
+          cp -R templates/templates/* \
+            "$HOME/Library/Application Support/Godot/export_templates/4.6.3.stable/"
 
-  - name: Export
-    run: |
-      godot --headless \
-        --path . \
-        --export-release "iOS" \
-        build/ios/catshooter.ipa
+      - name: Create build folder
+        run: mkdir -p build/ios
 
-  - name: Upload artifact
-    uses: actions/upload-artifact@v4
-    with:
-      name: ios-build
-      path: build/ios
-```
+      - name: Export iOS (Godot)
+        run: |
+          ./Godot.app/Contents/MacOS/Godot \
+            --headless \
+            --path . \
+            --export-release "iOS" \
+            build/ios/catshooter.ipa
+
+      - name: Debug output
+        run: ls -R build
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build
+          path: build/ios
