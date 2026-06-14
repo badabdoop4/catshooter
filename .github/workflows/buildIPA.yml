@@ -1,100 +1,35 @@
-name: Build iOS IPA
+name: Build iOS
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+workflow_dispatch:
 
 jobs:
-  build-ios:
-    runs-on: macos-latest
+build:
+runs-on: macos-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+```
+steps:
+  - uses: actions/checkout@v4
 
-      - name: Install Godot
-        run: |
-          curl -L -o godot.zip \
-            https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_macos.universal.zip
+  - name: Show files
+    run: |
+      pwd
+      ls -la
 
-          unzip godot.zip
-          chmod +x Godot.app/Contents/MacOS/Godot
+  - name: Create export folder
+    run: |
+      mkdir -p build/ios
 
-      - name: Install Export Templates
-        run: |
-          mkdir -p ~/Library/Application\ Support/Godot/export_templates/4.6.3.stable
-          curl -L -o templates.tpz \
-            https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_export_templates.tpz
+  - name: Export
+    run: |
+      godot --headless \
+        --path . \
+        --export-release "iOS" \
+        build/ios/catshooter.ipa
 
-          unzip templates.tpz -d templates
-          cp -R templates/templates/* \
-            ~/Library/Application\ Support/Godot/export_templates/4.6.3.stable/
-
-      - name: Export Xcode Project
-        run: |
-          ./Godot.app/Contents/MacOS/Godot \
-            --headless \
-            --export-release "iOS" build/ios/MyGame.xcodeproj
-
-      - name: Install Signing Assets
-        env:
-          P12_BASE64: ${{ secrets.IOS_CERTIFICATE }}
-          P12_PASSWORD: ${{ secrets.IOS_CERT_PASSWORD }}
-          PROFILE_BASE64: ${{ secrets.IOS_PROFILE }}
-        run: |
-          echo "$P12_BASE64" | base64 --decode > certificate.p12
-          echo "$PROFILE_BASE64" | base64 --decode > profile.mobileprovision
-
-          security create-keychain -p temp build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p temp build.keychain
-
-          security import certificate.p12 \
-            -k build.keychain \
-            -P "$P12_PASSWORD" \
-            -T /usr/bin/codesign
-
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp profile.mobileprovision \
-            ~/Library/MobileDevice/Provisioning\ Profiles/
-
-      - name: Archive
-        run: |
-          xcodebuild \
-            -project build/ios/MyGame.xcodeproj \
-            -scheme MyGame \
-            -configuration Release \
-            -archivePath build/MyGame.xcarchive \
-            archive
-
-      - name: Create ExportOptions.plist
-        run: |
-          cat > ExportOptions.plist <<EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-          "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key>
-            <string>app-store</string>
-            <key>signingStyle</key>
-            <string>manual</string>
-          </dict>
-          </plist>
-          EOF
-
-      - name: Export IPA
-        run: |
-          xcodebuild \
-            -exportArchive \
-            -archivePath build/MyGame.xcarchive \
-            -exportPath build/ipa \
-            -exportOptionsPlist ExportOptions.plist
-
-      - name: Upload IPA
-        uses: actions/upload-artifact@v4
-        with:
-          name: ios-ipa
-          path: build/ipa/*.ipa
+  - name: Upload artifact
+    uses: actions/upload-artifact@v4
+    with:
+      name: ios-build
+      path: build/ios
+```
