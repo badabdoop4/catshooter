@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://b7pqlnu1t0v8p"]
+
+[ext_resource type="Script" uid="uid://cd8fkufkb4jsa" path="res://scenes/enemy.gd" id="1_md0e3"]
+[ext_resource type="Texture2D" uid="uid://bkpga3w3kcoq4" path="res://assets/sprites/1.webp" id="2_md0e3"]
+
+[node name="Enemy" type="Area2D" unique_id=149179634]
+collision_layer = 2
+collision_mask = 9
+script = ExtResource("1_md0e3")
+
+[node name="Cat" type="Sprite2D" parent="." unique_id=1042823204]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_md0e3")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=1263380052]
+polygon = PackedVector2Array(-43, -37, -43, 42, 44, 42, 44, -42, 41, -41, 39, -39, 35, -32, 33, -31, 27, -31, 20, -33, 12, -35, 1, -36, -7, -35, -15, -34, -22, -33, -29, -32, -34, -32, -38, -33, -41, -36)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

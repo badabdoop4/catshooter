@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://c38smeruwf4ob"]
+
+[ext_resource type="Texture2D" uid="uid://dyoye0kaccwqv" path="res://assets/sprites/2.webp" id="1_qae0b"]
+[ext_resource type="Script" uid="uid://4ilnq3x3fret" path="res://scenes/game_over.gd" id="1_vuicl"]
+[ext_resource type="FontFile" uid="uid://dqv7i0rgp6ofa" path="res://assets/Comic Sans MS.ttf" id="2_vuicl"]
+[ext_resource type="AudioStream" uid="uid://w1q08kf82knq" path="res://assets/bone-crack.mp3" id="4_4noiy"]
+[ext_resource type="Texture2D" uid="uid://b1t2nyxgg7qo5" path="res://addons/virtual_joystick/textures/Outline.png" id="5_gijjb"]
+
+[node name="UI" type="CanvasLayer" unique_id=1644772567]
+script = ExtResource("1_vuicl")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=253912553]
+position = Vector2(647, 282.00003)
+scale = Vector2(3.3242185, 2.1503906)
+texture = ExtResource("1_qae0b")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=247342626]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.5
+offset_top = -73.0
+offset_right = 320.5
+offset_bottom = 73.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="MarginContainer" unique_id=198273985]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("2_vuicl")
+theme_override_font_sizes/font_size = 104
+text = "GAME OVER!"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer" unique_id=1878541003]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_bottom = -38
+
+[node name="Label2" type="Label" parent="MarginContainer/MarginContainer" unique_id=1466276526]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("2_vuicl")
+theme_override_font_sizes/font_size = 29
+text = "Your Score: "
+horizontal_alignment = 1
+
+[node name="Retry" type="MarginContainer" parent="." unique_id=596967755]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -148.0
+offset_top = -55.0
+offset_right = 148.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_bottom = 21
+
+[node name="Label" type="Label" parent="Retry" unique_id=2044664355]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_vuicl")
+theme_override_font_sizes/font_size = 24
+text = "[ Click anywhere to retry ]"
+horizontal_alignment = 1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1132788118]
+stream = ExtResource("4_4noiy")
+autoplay = true
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="." unique_id=1038309854]
+position = Vector2(-589, -292)
+scale = Vector2(4.6148148, 2.1962965)
+texture_normal = ExtResource("5_gijjb")
+texture_pressed = ExtResource("5_gijjb")
+
+[connection signal="pressed" from="TouchScreenButton" to="." method="_on_touch_screen_button_pressed"]

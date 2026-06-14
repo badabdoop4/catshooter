@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://ouxsv4v68ul7"]
+
+[ext_resource type="Texture2D" uid="uid://b5ji5faep7ddt" path="res://assets/sprites/My OC.png" id="1_4flbx"]
+[ext_resource type="Script" uid="uid://okioub41sr24" path="res://scenes/player.gd" id="1_g2els"]
+
+[node name="Player" type="CharacterBody2D" unique_id=718533398]
+collision_mask = 6
+script = ExtResource("1_g2els")
+
+[node name="PlayerImage" type="Sprite2D" parent="." unique_id=1212079685]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_4flbx")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=1405123632]
+scale = Vector2(0.99999994, 0.99999994)
+polygon = PackedVector2Array(-50, -50, 50, -50, 50, 50, -50, 50)
+
+[node name="ProjectileStartPos" type="Marker2D" parent="." unique_id=1201586074]
+position = Vector2(0, -50)
+
+[node name="ShootCooldown" type="Timer" parent="." unique_id=1493245038]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="timeout" from="ShootCooldown" to="." method="_on_shoot_cooldown_timeout"]

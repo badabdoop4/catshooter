@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bj7djbgk44det"]
+
+[ext_resource type="Script" uid="uid://ehl15xb4aq7o" path="res://scenes/shooty_shoot.gd" id="1_quuf0"]
+[ext_resource type="Texture2D" uid="uid://buo5si0mga7qf" path="res://assets/sprites/pngtree-realistic-3d-fire-flame-effect-for-designs-png-image_13631567.png" id="2_ik2nu"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ik2nu"]
+radius = 124.999985
+height = 419.99997
+
+[node name="Shooty Shooty" type="Area2D" unique_id=2138498063]
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("1_quuf0")
+
+[node name="Godototoo" type="Sprite2D" parent="." unique_id=1891139577]
+scale = Vector2(1e-05, 1e-05)
+texture = ExtResource("2_ik2nu")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2078795568]
+scale = Vector2(0.2, 0.2)
+shape = SubResource("CapsuleShape2D_ik2nu")

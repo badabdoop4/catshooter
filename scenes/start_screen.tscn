@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://blksvs0l2mweu"]
+
+[ext_resource type="Script" uid="uid://cuj8rvmvv5cnr" path="res://scenes/start_screen.gd" id="1_he1sj"]
+[ext_resource type="Texture2D" uid="uid://bgc0hqw26fesy" path="res://assets/sprites/bliss.jpg" id="1_o7i0r"]
+[ext_resource type="FontFile" uid="uid://dqv7i0rgp6ofa" path="res://assets/Comic Sans MS.ttf" id="2_he1sj"]
+[ext_resource type="AudioStream" uid="uid://f73boh5jie7b" path="res://assets/Sega Rally Championship OST - Power Games.mp3" id="4_r2jwc"]
+[ext_resource type="Texture2D" uid="uid://b1t2nyxgg7qo5" path="res://addons/virtual_joystick/textures/Outline.png" id="5_hm208"]
+
+[node name="Start Screen" type="CanvasLayer" unique_id=34968931]
+script = ExtResource("1_he1sj")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1634863927]
+position = Vector2(688, 229)
+scale = Vector2(0.8951563, 1.142222)
+texture = ExtResource("1_o7i0r")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1845786586]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -322.5
+offset_top = -79.0
+offset_right = 322.5
+offset_bottom = 79.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="MarginContainer" unique_id=1165350858]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_he1sj")
+theme_override_font_sizes/font_size = 113
+text = "Cat Shooter"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer" unique_id=1554268154]
+layout_mode = 2
+theme_override_constants/margin_top = 221
+theme_override_constants/margin_bottom = 0
+
+[node name="Label2" type="Label" parent="MarginContainer/MarginContainer" unique_id=346313240]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_he1sj")
+theme_override_font_sizes/font_size = 37
+text = "Click anywhere to play"
+horizontal_alignment = 1
+
+[node name="Bottom Text" type="MarginContainer" parent="." unique_id=359911704]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -40.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="Bottom Text" unique_id=392894768]
+layout_mode = 2
+text = "Made by Badiboop4"
+
+[node name="Sega Rally OST" type="AudioStreamPlayer" parent="." unique_id=1958904904]
+stream = ExtResource("4_r2jwc")
+autoplay = true
+parameters/looping = true
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="." unique_id=56271012]
+position = Vector2(-589, -292)
+scale = Vector2(4.6148148, 2.1962965)
+texture_normal = ExtResource("5_hm208")
+texture_pressed = ExtResource("5_hm208")
+
+[connection signal="pressed" from="TouchScreenButton" to="." method="_on_touch_screen_button_pressed"]

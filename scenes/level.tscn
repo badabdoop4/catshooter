@@ -1,0 +1,99 @@
+[gd_scene format=3 uid="uid://cbyp1xwa5d3e1"]
+
+[ext_resource type="PackedScene" uid="uid://ouxsv4v68ul7" path="res://scenes/player.tscn" id="1_2q6dc"]
+[ext_resource type="Script" uid="uid://woyhserkvrel" path="res://scenes/level.gd" id="1_ppgk2"]
+[ext_resource type="Texture2D" uid="uid://bgc0hqw26fesy" path="res://assets/sprites/bliss.jpg" id="2_w8frs"]
+[ext_resource type="PackedScene" uid="uid://bwfjtevt0h4ny" path="res://scenes/ui.tscn" id="80_4qdnu"]
+[ext_resource type="AudioStream" uid="uid://bs0ixt5kxx6w4" path="res://assets/Ruder Buster.mp3" id="81_7kuto"]
+[ext_resource type="AudioStream" uid="uid://dtvtyhgeo7fw" path="res://assets/undertale-damage-taken.mp3" id="82_clbla"]
+[ext_resource type="AudioStream" uid="uid://c504kbwctacqk" path="res://assets/killsoundpreview.mp3" id="83_ebg7i"]
+[ext_resource type="Texture2D" uid="uid://b4gpt6v251wxt" path="res://assets/sprites/shoot.png" id="84_ebg7i"]
+[ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://addons/virtual_joystick/virtual_joystick_scene.tscn" id="85_iobf8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w8frs"]
+
+[node name="Level" type="Node2D" unique_id=961064362]
+script = ExtResource("1_ppgk2")
+
+[node name="Background" type="Sprite2D" parent="." unique_id=1987785316]
+position = Vector2(653, 318.615)
+scale = Vector2(0.826, 0.912)
+texture = ExtResource("2_w8frs")
+metadata/_edit_lock_ = true
+
+[node name="Border" type="Node2D" parent="." unique_id=1047232097]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Border" unique_id=706768188]
+collision_layer = 4
+
+[node name="Right" type="CollisionShape2D" parent="Border/StaticBody2D" unique_id=768291103]
+position = Vector2(1382, 345)
+scale = Vector2(10, 60)
+shape = SubResource("RectangleShape2D_w8frs")
+metadata/_edit_lock_ = true
+
+[node name="Left" type="CollisionShape2D" parent="Border/StaticBody2D" unique_id=119039374]
+position = Vector2(-102, 372.00003)
+scale = Vector2(10, 60)
+shape = SubResource("RectangleShape2D_w8frs")
+metadata/_edit_lock_ = true
+
+[node name="Top" type="CollisionShape2D" parent="Border/StaticBody2D" unique_id=1955086168]
+position = Vector2(683.00006, -97.99994)
+scale = Vector2(80, 10)
+shape = SubResource("RectangleShape2D_w8frs")
+metadata/_edit_lock_ = true
+
+[node name="Bottom" type="CollisionShape2D" parent="Border/StaticBody2D" unique_id=1768941103]
+position = Vector2(653.775, 819.53)
+scale = Vector2(80, 10)
+shape = SubResource("RectangleShape2D_w8frs")
+metadata/_edit_lock_ = true
+
+[node name="Player" parent="." unique_id=121901224 instance=ExtResource("1_2q6dc")]
+position = Vector2(500, 296)
+
+[node name="Enemies" type="Node2D" parent="." unique_id=461067196]
+
+[node name="EnemySpawn" type="Timer" parent="Enemies" unique_id=1120415810]
+wait_time = 0.35
+autostart = true
+
+[node name="Projectiles" type="Node2D" parent="." unique_id=99158234]
+
+[node name="UI" parent="." unique_id=1644772567 instance=ExtResource("80_4qdnu")]
+
+[node name="BGM" type="AudioStreamPlayer" parent="." unique_id=1348410634]
+stream = ExtResource("81_7kuto")
+autoplay = true
+parameters/looping = true
+
+[node name="Hurt" type="AudioStreamPlayer" parent="." unique_id=811745261]
+stream = ExtResource("82_clbla")
+volume_db = 1.0
+
+[node name="Shoot" type="AudioStreamPlayer" parent="." unique_id=1534633857]
+stream = ExtResource("83_ebg7i")
+volume_db = 1.0
+
+[node name="Touch Controls" type="CanvasLayer" parent="." unique_id=376546566]
+
+[node name="Shoot" type="TouchScreenButton" parent="Touch Controls" unique_id=507142902]
+position = Vector2(1021.92, 463.475)
+scale = Vector2(0.37407395, 0.37407395)
+texture_normal = ExtResource("84_ebg7i")
+texture_pressed = ExtResource("84_ebg7i")
+shape_centered = false
+shape_visible = false
+passby_press = true
+
+[node name="Virtual Joystick" parent="Touch Controls" unique_id=145560831 instance=ExtResource("85_iobf8")]
+pressed_color = Color(1, 1, 1, 0.30588236)
+action_left = "left"
+action_right = "right"
+action_up = "up"
+action_down = "down"
+
+[connection signal="projectile" from="Player" to="." method="_on_player_projectile"]
+[connection signal="timeout" from="Enemies/EnemySpawn" to="." method="_on_enemy_spawn_timeout"]
+[connection signal="pressed" from="Touch Controls/Shoot" to="Player" method="_on_touch_screen_button_pressed"]

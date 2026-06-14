@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://bwfjtevt0h4ny"]
+
+[ext_resource type="FontFile" uid="uid://dqv7i0rgp6ofa" path="res://assets/Comic Sans MS.ttf" id="1_x4jx1"]
+[ext_resource type="Script" uid="uid://b5wamdt4lqowg" path="res://scenes/ui.gd" id="1_yev5y"]
+[ext_resource type="Texture2D" uid="uid://b5ji5faep7ddt" path="res://assets/sprites/My OC.png" id="2_yev5y"]
+
+[node name="UI" type="CanvasLayer" unique_id=1644772567 groups=["ui"]]
+script = ExtResource("1_yev5y")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=247342626]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -45.5
+offset_right = 45.5
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="MarginContainer" unique_id=198273985]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("1_x4jx1")
+theme_override_font_sizes/font_size = 38
+text = "Score: 0"
+horizontal_alignment = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="." unique_id=665620229]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -50.400024
+offset_right = 2740.0
+offset_bottom = 449.59998
+grow_vertical = 0
+scale = Vector2(0.1, 0.1)
+theme_override_constants/margin_left = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer2" unique_id=1504616668]
+layout_mode = 2
+theme_override_constants/separation = 60
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer2/HBoxContainer" unique_id=1785764660]
+layout_mode = 2
+mouse_default_cursor_shape = 8
+texture = ExtResource("2_yev5y")
+
+[node name="TextureRect2" type="TextureRect" parent="MarginContainer2/HBoxContainer" unique_id=365658033]
+layout_mode = 2
+mouse_default_cursor_shape = 8
+texture = ExtResource("2_yev5y")
+
+[node name="TextureRect3" type="TextureRect" parent="MarginContainer2/HBoxContainer" unique_id=1889583014]
+layout_mode = 2
+mouse_default_cursor_shape = 8
+texture = ExtResource("2_yev5y")
+
+[node name="TextureRect4" type="TextureRect" parent="MarginContainer2/HBoxContainer" unique_id=629941980]
+layout_mode = 2
+mouse_default_cursor_shape = 8
+texture = ExtResource("2_yev5y")
+
+[node name="TextureRect5" type="TextureRect" parent="MarginContainer2/HBoxContainer" unique_id=892935319]
+layout_mode = 2
+mouse_default_cursor_shape = 8
+texture = ExtResource("2_yev5y")
+
+[node name="ScoreTimer" type="Timer" parent="." unique_id=1236759295]
+autostart = true
+
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
