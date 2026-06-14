@@ -13,9 +13,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Clean build folder
-        run: rm -rf build/ios
-
       - name: Install Godot
         run: |
           curl -L -o godot.zip \
@@ -32,25 +29,53 @@ jobs:
           cp -R templates/templates/* \
             "$HOME/Library/Application Support/Godot/export_templates/4.6.3.stable/"
 
-      - name: Create build folder
-        run: mkdir -p build/ios
+      - name: Clean build folder
+        run: rm -rf build && mkdir -p build/ios
 
-      - name: Export iOS (Godot)
+      - name: Export Xcode Project
         run: |
-          rm -rf build/ios
-          mkdir -p build/ios
-
           ./Godot.app/Contents/MacOS/Godot \
             --headless \
             --path . \
             --export-release "iOS" \
             build/ios
 
-      - name: Debug output
-        run: ls -R build
+      - name: Build IPA with Xcode
+        run: |
+          cd build/ios
+          xcodebuild \
+            -project *.xcodeproj \
+            -scheme catshooter \
+            -configuration Release \
+            -sdk iphoneos \
+            -archivePath catshooter.xcarchive \
+            archive
+
+      - name: Export IPA
+        run: |
+          cd build/ios
+          cat > ExportOptions.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+          "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>development</string>
+            <key>signingStyle</key>
+            <string>automatic</string>
+          </dict>
+          </plist>
+          EOF
+
+          xcodebuild \
+            -exportArchive \
+            -archivePath catshooter.xcarchive \
+            -exportPath ipa \
+            -exportOptionsPlist ExportOptions.plist
 
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: ios-build
-          path: build/ios
+          name: ios-ipa
+          path: build/ios/ipa/*.ipa
